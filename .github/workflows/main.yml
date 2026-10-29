@@ -1,0 +1,59 @@
+name: Build JARVIS Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Check Gradle wrapper
+        run: |
+          if [ ! -f "./gradlew" ]; then
+            echo "ERROR: gradlew file is missing from the repository root."
+            exit 1
+          fi
+          chmod +x ./gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: JARVIS-AI-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 7
+
+### 📦 Step 4: APK कैसे मिलेगी?
+1. ऊपर **Commit changes** दबाओ।
+2. **Actions** टैब खोलो।
+3. `Build JARVIS Android APK` पर क्लिक करो।
+4. अगर workflow हरा ✅ हो जाए, तो नीचे **Artifacts** में `JARVIS-AI-APK` मिलेगा।
+5. उसे डाउनलोड करके ZIP से निकालो। उसके अंदर APK फ़ाइल होगी।
+
+**ध्यान दो:** यह Workflow APK बनाने की प्रक्रिया चलाएगा, लेकिन तभी सफल होगा जब Android प्रोजेक्ट में `app` मॉड्यूल, `gradlew`, `settings.gradle.kts` और सही Gradle configuration मौजूद हों। इससे अपने-आप ऐप का कोड नहीं बनता और पुराने Gradle plugin error को भी अलग से ठीक करना पड़ सकता है।
+
+**अब तुम `Actions` टैब का स्क्रीनशॉट भेज दो।** मैं तुम्हें अगला बटन बताऊँगा।
