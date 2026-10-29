@@ -1,0 +1,6 @@
+{
+  "name": "JARVIS AI",
+  "description": "Advanced Android Personal AI Assistant inspired by Iron Man and Google Gemini, featuring voice recognition, real device automation, and intelligence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
